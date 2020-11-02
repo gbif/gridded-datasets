@@ -89,7 +89,7 @@ object GriddedDatasets {
     //Second argument is the table
     val outTable = args(2)
 
-    val occurrences = spark.sql("SELECT * FROM " + database + "." + table)
+    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + database + "." + table)
       .filter($"decimallatitude".isNotNull)
       .filter($"decimallongitude".isNotNull)
       .filter(!$"datasetkey".isInCollection(excludeDatasets))
