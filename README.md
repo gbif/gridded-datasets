@@ -6,7 +6,7 @@ mvn clean build
 ## Prepare Postgres table
 ```postgres-sql
 CREATE TABLE public.dataset_gridded (
-	"key" uuid NOT NULL,
+	"key" bigserial NOT NULL DEFAULT nextval('dataset_gridded_key_seq'::regclass),
 	dataset_key uuid NOT NULL,
 	grids json NULL,
 	CONSTRAINT dataset_gridded_pk PRIMARY KEY (key),
