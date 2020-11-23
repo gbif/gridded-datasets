@@ -3,6 +3,18 @@
 mvn clean build
 ```
 
+## Prepare Postgres table
+```postgres-sql
+CREATE TABLE public.dataset_gridded (
+	"key" uuid NOT NULL,
+	dataset_key uuid NOT NULL,
+	grids json NULL,
+	CONSTRAINT dataset_gridded_pk PRIMARY KEY (key),
+	CONSTRAINT dataset_gridded_un UNIQUE (dataset_key),
+	CONSTRAINT dataset_gridded_fk FOREIGN KEY (dataset_key) REFERENCES dataset(key)
+);
+```
+
 ## How to run
 
 ```shell
