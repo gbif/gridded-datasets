@@ -57,7 +57,12 @@ object GriddedDatasets {
   def main(args: Array[String]) {
 
     // remove eBird, artportalen, observation.org, iNaturalist
-    val excludeDatasets = Set("4fa7b334-ce0d-4e88-aaae-2e0c138d049e", "38b4c89f-584c-41bb-bd8f-cd1def33e92f", "8a863029-f435-446a-821e-275f4f641165", "50c9509d-22c7-4a22-a47d-8c48425ef4a7")
+    val excludeDatasets = Set(
+      "4fa7b334-ce0d-4e88-aaae-2e0c138d049e",
+      "38b4c89f-584c-41bb-bd8f-cd1def33e92f",
+      "8a863029-f435-446a-821e-275f4f641165",
+      "50c9509d-22c7-4a22-a47d-8c48425ef4a7"
+    ).toSeq
 
     val spark = SparkSession.builder().appName("gridded_datasets").getOrCreate()
 
@@ -70,13 +75,13 @@ object GriddedDatasets {
     //Second argument is the table
     val table = args(1)
 
-    //Second argument is the table
+    //Output table
     val outTable = args(2)
 
     val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + database + "." + table)
       .filter($"decimallatitude".isNotNull)
       .filter($"decimallongitude".isNotNull)
-      //.filter(!$"datasetkey".isInCollection(excludeDatasets))
+      .filter(!$"datasetkey".isin(excludeDatasets:_*))
       .withColumn("rounded_decimallatitude", round(col("decimallatitude"), 4))
       .withColumn("rounded_decimallongitude", round(col("decimallongitude"), 4))
       .select("datasetkey", "rounded_decimallatitude", "rounded_decimallongitude")
