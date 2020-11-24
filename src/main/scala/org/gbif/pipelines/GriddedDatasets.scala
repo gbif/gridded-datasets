@@ -81,7 +81,7 @@ object GriddedDatasets {
     val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + database + "." + table)
       .filter($"decimallatitude".isNotNull)
       .filter($"decimallongitude".isNotNull)
-      .filter(!$"datasetkey".isin(excludeDatasets:_*))
+      .filter(!$"datasetkey".isin(excludeDatasets: _*))
       .withColumn("rounded_decimallatitude", round(col("decimallatitude"), 4))
       .withColumn("rounded_decimallongitude", round(col("decimallongitude"), 4))
       .select("datasetkey", "rounded_decimallatitude", "rounded_decimallongitude")
@@ -104,10 +104,21 @@ object GriddedDatasets {
     // export data to tsv
     Seq(dfExportSmall, dfExportBig)
       .reduce(_ union _)
+      // Merge all columns into structure
+      .withColumn("struct", struct("total_count", "min_dist", "min_dist_count", "percent", "max_percent"))
+      // Drop all extra columns, leave dataset and struct only
+      .drop("total_count")
+      .drop("min_dist")
+      .drop("min_dist_count")
+      .drop("percent")
+      .drop("max_percent")
+      // Group by datasetkey key and convert to json, dataset_key -> json[]
+      .groupBy(col("datasetkey").as("dataset_key")).agg(to_json(collect_list("struct")).as("json"))
+      // Write to single csv file with headers
+      .repartition(1)
       .write
       .format("csv")
-      .option("sep", "\t")
-      .option("header", "false")
+      .option("header", "true")
       .mode(SaveMode.Overwrite)
       .save(outTable)
   }
