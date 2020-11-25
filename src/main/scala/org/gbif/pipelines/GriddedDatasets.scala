@@ -119,9 +119,9 @@ object GriddedDatasets {
       .write
       .format("jdbc")
       .option("url", jdbcUrl)
+      .option("dbtable", outTable)
       .option("user", jdbcUser)
       .option("password", jdbcPassword)
-      .option("dbtable", outTable)
       .mode(SaveMode.Overwrite)
       .save()
   }
