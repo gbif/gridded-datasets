@@ -69,16 +69,16 @@ object GriddedDatasets {
     import spark.implicits._
     spark.sparkContext.setLogLevel("ERROR") // reduce printed output
 
-    //Firsts argument is the database
-    val database = args(0)
-
-    //Second argument is the table
-    val table = args(1)
+    //Input table
+    val inTable = args(0)
 
     //Output table
-    val outTable = args(2)
+    val jdbcUrl = args(1)
+    val jdbcUser = args(2)
+    val jdbcPassword = args(3)
+    val outTable = args(4)
 
-    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + database + "." + table)
+    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + inTable)
       .filter($"decimallatitude".isNotNull)
       .filter($"decimallongitude".isNotNull)
       .filter(!$"datasetkey".isin(excludeDatasets: _*))
@@ -117,10 +117,13 @@ object GriddedDatasets {
       // Write to single csv file with headers
       .repartition(1)
       .write
-      .format("csv")
-      .option("header", "true")
+      .format("jdbc")
+      .option("url", jdbcUrl)
+      .option("user", jdbcUser)
+      .option("password", jdbcPassword)
+      .option("dbtable", outTable)
       .mode(SaveMode.Overwrite)
-      .save(outTable)
+      .save()
   }
 
 }

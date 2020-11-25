@@ -18,11 +18,12 @@ CREATE TABLE public.dataset_gridded (
 ## How to run
 
 ```shell
-# Copy to Gateway VH
+# Download JDBC driver and copy to Gateway VH
+# Copy gridded-datasets artifact to Gateway VH
 scp gridded-datasets/target/gridded-datasets-1.0-SNAPSHOT.jar your_userk@c3gateway-vh.gbif.org:.
 
 # dev - database name
 # occurrence - table name
-# /tmp/gr/5 - output directory
-sudo -u hdfs spark2-submit --conf spark.executor.memoryOverhead=2048 --class org.gbif.pipelines.GriddedDatasets --master yarn --executor-memory 8G --executor-cores 4 --num-executors 2 --driver-memory 1G gridded-datasets-1.0-SNAPSHOT.jar dev occurrence /tmp/gr/5
+# public.dataset_gridded - output table
+sudo -u hdfs spark2-submit --driver-class-path postgresql-42.2.18.jar --jars postgresql-42.2.18.jar --conf spark.executor.memoryOverhead=2048 --class org.gbif.pipelines.GriddedDatasets --master yarn --executor-memory 8G --executor-cores 4 --num-executors 2 --driver-memory 1G gridded-datasets-1.0-SNAPSHOT.jar dev.occurrence jdbc:postgresql://pg1.gbif-dev.org/dev_registry user password public.dataset_gridded
 ```
