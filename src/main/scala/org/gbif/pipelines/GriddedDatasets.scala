@@ -6,9 +6,22 @@ import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
+import scala.annotation.tailrec
 import scala.math.sqrt
 
 object GriddedDatasets {
+
+  // To aid running in Oozie, all properties are supplied as main arguments
+  val usage =
+    """
+    Usage: GriddedDatasets \
+      [--hive-db hiveDatabase] \
+      [--hive-table-occurrence hiveTableOccurrence] \
+      [--jdbc-url jdbcUrl] \
+      [--jdbc-user jdbcUser] \
+      [--jdbc-password jdbcPassword] \
+      [--jdbc-table jdbcTable]
+  """
 
   def project(dfVector: DataFrame, datasetCounts: DataFrame, minRecordCount: Long, maxRecordCount: Long, bucketLength: Double)(implicit sparkSession: SparkSession): DataFrame = {
     import sparkSession.implicits._
@@ -56,6 +69,17 @@ object GriddedDatasets {
 
   def main(args: Array[String]) {
 
+    val parsedArgs = checkArgs(args) // sanitize input
+    assert(parsedArgs.size == 6, usage)
+    System.err.println("Configuration: " + parsedArgs) // Oozie friendly logging use
+
+    val hiveDatabase = parsedArgs('hiveDatabase)
+    val hiveTableOccurrence = parsedArgs('hiveTableOccurrence)
+    val jdbcUrl = parsedArgs('jdbcUrl)
+    val jdbcUser = parsedArgs('jdbcUser)
+    val jdbcPassword = parsedArgs('jdbcPassword)
+    val jdbcTable = parsedArgs('jdbcTable)
+
     // remove eBird, artportalen, observation.org, iNaturalist
     val excludeDatasets = Set(
       "4fa7b334-ce0d-4e88-aaae-2e0c138d049e",
@@ -64,21 +88,12 @@ object GriddedDatasets {
       "50c9509d-22c7-4a22-a47d-8c48425ef4a7"
     ).toSeq
 
-    val spark = SparkSession.builder().appName("gridded_datasets").getOrCreate()
+    val spark = SparkSession.builder().appName("Gridded datasets").getOrCreate()
 
     import spark.implicits._
     spark.sparkContext.setLogLevel("ERROR") // reduce printed output
 
-    //Input table
-    val inTable = args(0)
-
-    //Output table
-    val jdbcUrl = args(1)
-    val jdbcUser = args(2)
-    val jdbcPassword = args(3)
-    val outTable = args(4)
-
-    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + inTable)
+    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + hiveDatabase + "." + hiveTableOccurrence)
       .filter($"decimallatitude".isNotNull)
       .filter($"decimallongitude".isNotNull)
       .filter(!$"datasetkey".isin(excludeDatasets: _*))
@@ -119,11 +134,42 @@ object GriddedDatasets {
       .write
       .format("jdbc")
       .option("url", jdbcUrl)
-      .option("dbtable", outTable)
+      .option("dbtable", jdbcTable)
       .option("user", jdbcUser)
       .option("password", jdbcPassword)
       .mode(SaveMode.Overwrite)
       .save()
+  }
+
+  /**
+   * Sanitizes application arguments.
+   */
+  private def checkArgs(args: Array[String]): Map[Symbol, String] = {
+    assert(args != null && args.length == 12, usage)
+
+    @tailrec
+    def nextOption(map: Map[Symbol, String], list: List[String]): Map[Symbol, String] = {
+      list match {
+        case Nil => map
+        case "--hive-db" :: value :: tail =>
+          nextOption(map ++ Map('hiveDatabase -> value), tail)
+        case "--hive-table-occurrence" :: value :: tail =>
+          nextOption(map ++ Map('hiveTableOccurrence -> value), tail)
+        case "--jdbc-url" :: value :: tail =>
+          nextOption(map ++ Map('jdbcUrl -> value), tail)
+        case "--jdbc-user" :: value :: tail =>
+          nextOption(map ++ Map('jdbcUser -> value), tail)
+        case "--jdbc-password" :: value :: tail =>
+          nextOption(map ++ Map('jdbcPassword -> value), tail)
+        case "--jdbc-table" :: value :: tail =>
+          nextOption(map ++ Map('jdbcTable -> value), tail)
+        case option :: _ => println("Unknown option " + option)
+          System.exit(1)
+          map
+      }
+    }
+
+    nextOption(Map(), args.toList)
   }
 
 }
