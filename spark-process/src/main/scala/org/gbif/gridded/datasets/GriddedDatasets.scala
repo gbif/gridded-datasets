@@ -1,4 +1,4 @@
-package org.gbif.pipelines
+package org.gbif.gridded.datasets
 
 import org.apache.spark.ml.feature.{BucketedRandomProjectionLSH, VectorAssembler}
 import org.apache.spark.ml.linalg.{Vector, Vectors}

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workflow-app xmlns="uri:oozie:workflow:0.4.5" name="gridded-datasets">
+
+  <global>
+    <job-tracker>${wf:conf("hadoop.jobtracker")}</job-tracker>
+    <name-node>${wf:conf("hdfs.namenode")}</name-node>
+    <configuration>
+      <property>
+        <name>oozie.launcher.mapred.job.queue.name</name>
+        <value>${wf:conf("hadoop.queuename")}</value>
+      </property>
+      <property>
+        <name>oozie.action.sharelib.for.spark</name>
+        <value>spark2</value>
+      </property>
+    </configuration>
+  </global>
+
+  <start to="griddedDatasets" />
+
+  <action name="griddedDatasets">
+    <spark xmlns="uri:oozie:spark-action:0.1">
+      <job-tracker>${wf:conf("hadoop.jobtracker")}</job-tracker>
+      <name-node>${wf:conf("hdfs.namenode")}</name-node>
+      <master>yarn-cluster</master>
+    </spark>
+    <ok to="end" />
+    <error to="kill" />
+  </action>
+
+  <kill name="kill">
+    <message>Gridded Datasets processing failed:[${wf:errorMessage(wf:lastErrorNode())}]</message>
+  </kill>
+
+  <end name="end" />
+
+</workflow-app>

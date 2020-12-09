@@ -25,5 +25,5 @@ scp gridded-datasets/target/gridded-datasets-1.0-SNAPSHOT.jar your_userk@c3gatew
 # dev - database name
 # occurrence - table name
 # public.dataset_gridded - output table
-sudo -u hdfs spark2-submit --driver-class-path postgresql-42.2.18.jar --jars postgresql-42.2.18.jar --conf spark.executor.memoryOverhead=2048 --class org.gbif.pipelines.GriddedDatasets --master yarn --executor-memory 8G --executor-cores 4 --num-executors 2 --driver-memory 1G gridded-datasets-1.0-SNAPSHOT.jar --hive-db dev --hive-table-occurrence occurrence --jdbc-url jdbc:postgresql://pg1.gbif-dev.org/dev_registry --jdbc-user user --jdbc-password password --jdbc-table public.dataset_gridded
+sudo -u hdfs spark2-submit --driver-class-path postgresql-42.2.18.jar --jars postgresql-42.2.18.jar --conf spark.executor.memoryOverhead=2048 --class org.gbif.gridded.datasets.GriddedDatasets --master yarn --executor-memory 8G --executor-cores 4 --num-executors 2 --driver-memory 1G gridded-datasets-1.0-SNAPSHOT.jar --hive-db dev --hive-table-occurrence occurrence --jdbc-url jdbc:postgresql://pg1.gbif-dev.org/dev_registry --jdbc-user user --jdbc-password password --jdbc-table public.dataset_gridded
 ```
