@@ -5,7 +5,7 @@ set -o pipefail
 ENV=$1
 TOKEN=$2
 
-echo "Installing gridded datasets workflows for $ENV"
+echo "Installing gridded datasets workflow for $ENV"
 
 echo "Get latest gridded-datasets config profiles from GitHub"
 curl -Ss -H "Authorization: token $TOKEN" -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/gbif/gbif-configuration/contents/gridded-datasets/$ENV/gridded.properties
