@@ -16,12 +16,7 @@
   <name>Gridded Datasets :: Spark process</name>
 
   <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <encoding>UTF-8</encoding>
-
     <spark.version>2.3.0</spark.version>
-
     <scala-maven-plugin.version>4.3.1</scala-maven-plugin.version>
   </properties>
 
