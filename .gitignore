@@ -1,0 +1,16 @@
+.idea
+*.iml
+*.log
+*.log.*
+*.crc
+target
+output
+java-generated
+bin
+.DS_Store
+logs
+log
+temp
+tmp
+minicluster
+release.properties
