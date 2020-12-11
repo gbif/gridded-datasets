@@ -69,7 +69,7 @@ object GriddedDatasets {
 
   def main(args: Array[String]) {
 
-    System.err.println("Args: " + args.mkString("Array(", ", ", ")"))
+    println(args.mkString("Array(", ", ", ")"))
 
     val parsedArgs = checkArgs(args) // sanitize input
     assert(parsedArgs.size == 6, usage)
