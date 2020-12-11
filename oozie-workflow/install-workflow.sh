@@ -23,7 +23,7 @@ fi
 
 echo "Assembling jar for $ENV"
 # Oozie uses timezone UTC
-mvn -Dgridded.frequency="$FREQUENCY" -Dgridded.start="$START" -DskipTests -Duser.timezone=UTC clean install
+mvn -Dgridded.frequency="$FREQUENCY" -Dgridded.start="$START" -DskipTests -Duser.timezone=UTC clean install -U
 
 echo "Copy to Hadoop"
 sudo -u hdfs hdfs dfs -rm -r /gridded-datasets-workflow/
