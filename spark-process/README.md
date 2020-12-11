@@ -18,7 +18,6 @@ CREATE TABLE public.dataset_gridded (
 ## How to run
 
 ```shell
-# Download JDBC driver and copy to Gateway VH
 # Copy gridded-datasets artifact to Gateway VH
 scp gridded-datasets/target/gridded-datasets-1.0-SNAPSHOT.jar your_userk@c3gateway-vh.gbif.org:.
 
