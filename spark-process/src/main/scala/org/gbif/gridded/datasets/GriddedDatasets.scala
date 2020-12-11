@@ -6,6 +6,7 @@ import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
+import java.io.File
 import scala.annotation.tailrec
 import scala.math.sqrt
 
@@ -88,12 +89,21 @@ object GriddedDatasets {
       "50c9509d-22c7-4a22-a47d-8c48425ef4a7"
     ).toSeq
 
-    val spark = SparkSession.builder().appName("Gridded datasets").getOrCreate()
+    val warehouseLocation = new File("spark-warehouse").getAbsolutePath
+
+    val spark = SparkSession
+      .builder()
+      .appName("Gridded datasets")
+      .config("spark.sql.warehouse.dir", warehouseLocation)
+      .enableHiveSupport()
+      .getOrCreate()
+
+    spark.sql("use " + hiveDatabase)
 
     import spark.implicits._
     spark.sparkContext.setLogLevel("ERROR") // reduce printed output
 
-    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + hiveDatabase + "." + hiveTableOccurrence)
+    val occurrences = spark.sql("SELECT datasetkey, decimallatitude, decimallongitude FROM " + hiveTableOccurrence)
       .filter($"decimallatitude".isNotNull)
       .filter($"decimallongitude".isNotNull)
       .filter(!$"datasetkey".isin(excludeDatasets: _*))
