@@ -30,5 +30,5 @@ sudo -u hdfs hdfs dfs -rm -r /gridded-datasets-workflow/
 sudo -u hdfs hdfs dfs -copyFromLocal target/gridded-datasets-workflow /
 sudo -u hdfs hdfs dfs -copyFromLocal /etc/hive/conf/hive-site.xml /gridded-datasets-workflow/lib/
 
-echo "Start Oozie points job"
+echo "Start Oozie gridded datasets job"
 sudo -u hdfs oozie job --oozie $OOZIE -config gridded.properties -run
