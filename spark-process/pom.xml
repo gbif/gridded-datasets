@@ -18,6 +18,7 @@
   <properties>
     <spark.version>2.3.0</spark.version>
     <scala-maven-plugin.version>4.3.1</scala-maven-plugin.version>
+    <postgresql.version>42.2.18</postgresql.version>
   </properties>
 
   <build>
@@ -45,6 +46,18 @@
             <goals>
               <goal>add-source</goal>
               <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
             </goals>
           </execution>
         </executions>
@@ -77,6 +90,12 @@
       <version>${spark.version}</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
+
   </dependencies>
 
 </project>
