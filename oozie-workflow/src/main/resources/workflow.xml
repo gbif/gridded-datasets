@@ -28,6 +28,12 @@
       <jar>lib/spark-process.jar</jar>
       <!-- Following enabling static service pools (cgroups) we found the native libraries would not load. The only way we found to pass this through was using extraLibraryPath -->
       <spark-opts>${wf:conf("gbif.gridded.spark.opts")} --conf spark.executor.extraLibraryPath=/opt/cloudera/parcels/CDH/lib/hadoop/lib/native</spark-opts>
+      <arg>${wf:conf("gbif.gridded.hive.db")}</arg>
+      <arg>${wf:conf("gbif.gridded.hive.table")}</arg>
+      <arg>${wf:conf("gbif.gridded.jdbc.url")}</arg>
+      <arg>${wf:conf("gbif.gridded.jdbc.user")}</arg>
+      <arg>${wf:conf("gbif.gridded.jdbc.password")}</arg>
+      <arg>${wf:conf("gbif.gridded.jdbc.table")}</arg>
     </spark>
     <ok to="end" />
     <error to="kill" />
