@@ -126,7 +126,7 @@ object GriddedDatasets {
     val dfExportSmall = project(dfVector, datasetCounts, 20, 7000, 2)(spark)
     val dfExportBig = project(dfVector, datasetCounts, 7000, 50000, 0.1)(spark)
 
-    // export data to tsv
+    // export data to db
     Seq(dfExportSmall, dfExportBig)
       .reduce(_ union _)
       // Merge all columns into structure
@@ -139,7 +139,7 @@ object GriddedDatasets {
       .drop("max_percent")
       // Group by datasetkey key and convert to json, dataset_key -> json[]
       .groupBy(col("datasetkey").as("dataset_key")).agg(to_json(collect_list("struct")).as("json"))
-      // Write to single csv file with headers
+      // Write to DB table
       .repartition(1)
       .write
       .format("jdbc")
