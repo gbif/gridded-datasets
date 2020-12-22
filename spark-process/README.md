@@ -1,11 +1,7 @@
-## How to build
-```shell
-mvn clean build
-```
-
 ## Prepare Postgres table
+
 ```postgres-sql
-CREATE TABLE public.dataset_gridded (
+CREATE TABLE public.dataset_gridded IF NOT EXISTS (
 	"key" bigserial NOT NULL DEFAULT nextval('dataset_gridded_key_seq'::regclass),
 	dataset_key uuid NOT NULL,
 	grids json NULL,
@@ -15,11 +11,17 @@ CREATE TABLE public.dataset_gridded (
 );
 ```
 
+## How to build
+
+```shell
+mvn clean build
+```
+
 ## How to run
 
 ```shell
 # Copy gridded-datasets artifact to Gateway VH
-scp gridded-datasets/spark-process/target/spark-process-1.0-SNAPSHOT.jar your_userk@c3gateway-vh.gbif.org:.
+scp spark-process/target/spark-process-1.0-SNAPSHOT.jar your_userk@c3gateway-vh.gbif.org:.
 
 # dev - database name
 # occurrence - table name
