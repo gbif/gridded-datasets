@@ -1,8 +1,8 @@
 ## Prepare Postgres table
 
 ```postgres-sql
-CREATE TABLE public.dataset_gridded IF NOT EXISTS (
-	"key" bigserial NOT NULL DEFAULT nextval('dataset_gridded_key_seq'::regclass),
+CREATE TABLE IF NOT exists public.dataset_gridded (
+	"key" bigserial NOT NULL,
 	dataset_key uuid NOT NULL,
 	grids json NULL,
 	CONSTRAINT dataset_gridded_pk PRIMARY KEY (key),
