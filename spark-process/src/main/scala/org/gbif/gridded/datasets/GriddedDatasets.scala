@@ -141,6 +141,7 @@ object GriddedDatasets {
       .option("user", jdbcUser)
       .option("password", jdbcPassword)
       .option("truncate", true)
+      .option("stringtype", "unspecified")
       .mode(SaveMode.Overwrite)
       .save()
   }
