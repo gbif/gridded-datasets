@@ -129,16 +129,9 @@ object GriddedDatasets {
     // export data to db
     Seq(dfExportSmall, dfExportBig)
       .reduce(_ union _)
-      // Merge all columns into structure
-      .withColumn("struct", struct("total_count", "min_dist", "min_dist_count", "percent", "max_percent"))
-      // Drop all extra columns, leave dataset and struct only
-      .drop("total_count")
-      .drop("min_dist")
-      .drop("min_dist_count")
-      .drop("percent")
-      .drop("max_percent")
-      // Group by datasetkey key and convert to json, dataset_key -> json[]
-      .groupBy(col("datasetkey").as("dataset_key")).agg(to_json(collect_list("struct")).as("json"))
+      // Rename datasetKey to dataset_key
+      .withColumn("dataset_key", col("datasetkey"))
+      .drop("datasetkey")
       // Write to DB table
       .repartition(1)
       .write
@@ -147,13 +140,12 @@ object GriddedDatasets {
       .option("dbtable", jdbcTable)
       .option("user", jdbcUser)
       .option("password", jdbcPassword)
+      .option("truncate", true)
       .mode(SaveMode.Overwrite)
       .save()
   }
 
-  /**
-   * Sanitizes application arguments.
-   */
+  /** Sanitizes application arguments. */
   private def checkArgs(args: Array[String]): Map[Symbol, String] = {
     assert(args != null && args.length == 12, usage)
 
