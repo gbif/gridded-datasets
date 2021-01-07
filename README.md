@@ -29,7 +29,7 @@ After this feature is computed the following datasets are classified as **gridde
 2. Datasets that have >30% of their unique lat-lon points with the same nearest neighbor distance.
 3. Datasets with a nearest neighbor distances >0.02 decimal degrees.
 
-This implementation is limited to datasets with <50,000 unique (lat,lon) points. It uses [local sensitivity hashing](https://en.wikipedia.org/wiki/Locality-sensitive_hashing) to reduce the NxN search space for nearest neighbor distances. Because of this sometimes datasets on a small grid (approx. < 0.1) with a large amount of unique points (>50,000), will not be found.   
+This implementation is limited to datasets with <30,000 unique (lat,lon) points. It uses [local sensitivity hashing](https://en.wikipedia.org/wiki/Locality-sensitive_hashing) to reduce the NxN search space for nearest neighbor distances. Because of this sometimes datasets on a small grid (approx. < 0.1) with a large amount of unique points (>30,000), will not be found.   
 
 Most gridded datasets on GBIF fill in 1 of the 3 following fields (usually with a constant value): 
 
