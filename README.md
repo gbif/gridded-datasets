@@ -43,10 +43,10 @@ Since **not all gridded dataset publishers fill in these fields**, this project 
 
 The end result of the gridded dataset search will produce a table with the following columns:
 
-**totalCount** (total_count) : the total number unique lat-lon points in the dataset. 
-**minDist** (min_dist) : the most common nearest neighbor (minimum) distance between unique lat-lon points.  
-**minDistCount** (min_dist_count) : the number of nearest neightbor distances that are equal to the **minDist**. 
-**maxPercent** (max_percent) : the percentage (fraction 0-1) of unique lat-lon points that have the same nearest neighbor distance. 
+* **totalCount** (total_count) : the total number unique lat-lon points in the dataset. 
+* **minDist** (min_dist) : the most common nearest neighbor (minimum) distance between unique lat-lon points.  
+* **minDistCount** (min_dist_count) : the number of nearest neightbor distances that are equal to the **minDist**. 
+* **maxPercent** (max_percent) : the percentage (fraction 0-1) of unique lat-lon points that have the same nearest neighbor distance. 
 
 **maxPercent** is the main way to identify a "gridded" dataset. If this number is high (> 0.3), then the dataset is considered gridded. 
 
