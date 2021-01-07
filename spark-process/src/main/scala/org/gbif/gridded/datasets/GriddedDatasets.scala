@@ -124,7 +124,7 @@ object GriddedDatasets {
 
     // split into big and small groups for bucket tuning
     val dfExportSmall = project(dfVector, datasetCounts, 20, 7000, 2)(spark)
-    val dfExportBig = project(dfVector, datasetCounts, 7000, 50000, 0.1)(spark)
+    val dfExportBig = project(dfVector, datasetCounts, 7000, 30000, 0.1)(spark)
 
     // export data to db
     Seq(dfExportSmall, dfExportBig)
