@@ -5,10 +5,10 @@ CREATE TABLE IF NOT exists public.dataset_gridded (
 	"key" bigserial NOT NULL,
 	dataset_key uuid NOT NULL,
 	total_count int,
-    min_dist float,
-    min_dist_count int,
-    "percent" float,
-    max_percent float,
+    	min_dist float,
+    	min_dist_count int,
+    	"percent" float,
+    	max_percent float,
 	CONSTRAINT dataset_gridded_pk PRIMARY KEY (key)
 );
 
