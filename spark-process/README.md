@@ -18,7 +18,7 @@ CREATE INDEX IF NOT EXISTS dataset_griddeds_dataset_key_idx ON dataset_gridded(d
 ## How to build
 
 ```shell
-mvn clean build
+mvn clean package
 ```
 
 ## How to run
