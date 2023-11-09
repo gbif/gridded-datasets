@@ -144,7 +144,7 @@ object GriddedDatasets {
    * Sanitizes application arguments.
    */
   private def checkArgs(args: Array[String]) = {
-    //assert(args != null && args.length == 1, usage)
+    assert(args != null && args.length == 1, usage)
   }
 
 }
