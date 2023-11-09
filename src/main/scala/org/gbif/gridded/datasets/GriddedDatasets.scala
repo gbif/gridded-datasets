@@ -60,13 +60,10 @@ object GriddedDatasets {
 
   def main(args: Array[String]) {
 
-    System.err.println("args: " + args)
-
     checkArgs(args) // sanitize input
 
     // load application config
     val config: GriddedConfiguration = Configurations.fromFile(args(0))
-    System.err.println("Configuration: " + config)
 
     val hiveDatabase = config.hive.database
     val hiveTableOccurrence = config.hive.table
@@ -74,6 +71,13 @@ object GriddedDatasets {
     val jdbcUser = config.registry.user
     val jdbcPassword = config.registry.password
     val jdbcTable = config.registry.table
+
+    System.err.println("hiveDatabase: " + hiveDatabase)
+    System.err.println("hiveTableOccurrence: " + hiveTableOccurrence)
+    System.err.println("jdbcUrl: " + jdbcUrl)
+    System.err.println("jdbcUser: " + jdbcUser)
+    System.err.println("jdbcPassword: " + jdbcPassword)
+    System.err.println("jdbcTable: " + jdbcTable)
 
     // remove eBird, artportalen, observation.org, iNaturalist
     val excludeDatasets = Set(
