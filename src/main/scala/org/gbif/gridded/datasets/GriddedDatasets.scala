@@ -12,17 +12,7 @@ import scala.math.sqrt
 
 object GriddedDatasets {
 
-  // To aid running in Oozie, all properties are supplied as main arguments
-  val usage =
-    """
-    Usage: GriddedDatasets \
-      [--hive-db hiveDatabase] \
-      [--hive-table-occurrence hiveTableOccurrence] \
-      [--jdbc-url jdbcUrl] \
-      [--jdbc-user jdbcUser] \
-      [--jdbc-password jdbcPassword] \
-      [--jdbc-table jdbcTable]
-  """
+  val usage = "Usage: configFile"
 
   def project(dfVector: DataFrame, datasetCounts: DataFrame, minRecordCount: Long, maxRecordCount: Long, bucketLength: Double)(implicit sparkSession: SparkSession): DataFrame = {
     import sparkSession.implicits._
@@ -70,16 +60,18 @@ object GriddedDatasets {
 
   def main(args: Array[String]) {
 
-    val parsedArgs = checkArgs(args) // sanitize input
-    assert(parsedArgs.size == 6, usage)
-    System.err.println("Configuration: " + parsedArgs) // Oozie friendly logging use
+    checkArgs(args) // sanitize input
 
-    val hiveDatabase = parsedArgs('hiveDatabase)
-    val hiveTableOccurrence = parsedArgs('hiveTableOccurrence)
-    val jdbcUrl = parsedArgs('jdbcUrl)
-    val jdbcUser = parsedArgs('jdbcUser)
-    val jdbcPassword = parsedArgs('jdbcPassword)
-    val jdbcTable = parsedArgs('jdbcTable)
+    // load application config
+    val config: GriddedConfiguration = Configurations.fromFile(args(1))
+    System.err.println("Configuration: " + config) // Oozie friendly logging use
+
+    val hiveDatabase = config.hive.database
+    val hiveTableOccurrence = config.hive.table
+    val jdbcUrl = config.registry.jdbc
+    val jdbcUser = config.registry.user
+    val jdbcPassword = config.registry.password
+    val jdbcTable = config.registry.table
 
     // remove eBird, artportalen, observation.org, iNaturalist
     val excludeDatasets = Set(
@@ -146,33 +138,11 @@ object GriddedDatasets {
       .save()
   }
 
-  /** Sanitizes application arguments. */
-  private def checkArgs(args: Array[String]): Map[Symbol, String] = {
-    assert(args != null && args.length == 12, usage)
-
-    @tailrec
-    def nextOption(map: Map[Symbol, String], list: List[String]): Map[Symbol, String] = {
-      list match {
-        case Nil => map
-        case "--hive-db" :: value :: tail =>
-          nextOption(map ++ Map('hiveDatabase -> value), tail)
-        case "--hive-table-occurrence" :: value :: tail =>
-          nextOption(map ++ Map('hiveTableOccurrence -> value), tail)
-        case "--jdbc-url" :: value :: tail =>
-          nextOption(map ++ Map('jdbcUrl -> value), tail)
-        case "--jdbc-user" :: value :: tail =>
-          nextOption(map ++ Map('jdbcUser -> value), tail)
-        case "--jdbc-password" :: value :: tail =>
-          nextOption(map ++ Map('jdbcPassword -> value), tail)
-        case "--jdbc-table" :: value :: tail =>
-          nextOption(map ++ Map('jdbcTable -> value), tail)
-        case option :: _ => println("Unknown option " + option)
-          System.exit(1)
-          map
-      }
-    }
-
-    nextOption(Map(), args.toList)
+  /**
+   * Sanitizes application arguments.
+   */
+  private def checkArgs(args: Array[String]) = {
+    assert(args != null && args.length == 1, usage)
   }
 
 }
