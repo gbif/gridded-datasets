@@ -72,13 +72,6 @@ object GriddedDatasets {
     val jdbcPassword = config.registry.password
     val jdbcTable = config.registry.table
 
-    System.err.println("hiveDatabase: " + hiveDatabase)
-    System.err.println("hiveTableOccurrence: " + hiveTableOccurrence)
-    System.err.println("jdbcUrl: " + jdbcUrl)
-    System.err.println("jdbcUser: " + jdbcUser)
-    System.err.println("jdbcPassword: " + jdbcPassword)
-    System.err.println("jdbcTable: " + jdbcTable)
-
     // remove eBird, artportalen, observation.org, iNaturalist
     val excludeDatasets = Set(
       "4fa7b334-ce0d-4e88-aaae-2e0c138d049e",
