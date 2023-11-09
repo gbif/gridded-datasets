@@ -65,7 +65,7 @@ object GriddedDatasets {
     checkArgs(args) // sanitize input
 
     // load application config
-    val config: GriddedConfiguration = Configurations.fromFile(args(1))
+    val config: GriddedConfiguration = Configurations.fromFile(args(0))
     System.err.println("Configuration: " + config)
 
     val hiveDatabase = config.hive.database
