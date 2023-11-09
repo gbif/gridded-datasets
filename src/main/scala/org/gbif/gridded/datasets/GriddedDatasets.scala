@@ -60,11 +60,13 @@ object GriddedDatasets {
 
   def main(args: Array[String]) {
 
+    System.err.println("args: " + args)
+
     checkArgs(args) // sanitize input
 
     // load application config
     val config: GriddedConfiguration = Configurations.fromFile(args(1))
-    System.err.println("Configuration: " + config) // Oozie friendly logging use
+    System.err.println("Configuration: " + config)
 
     val hiveDatabase = config.hive.database
     val hiveTableOccurrence = config.hive.table
@@ -142,7 +144,7 @@ object GriddedDatasets {
    * Sanitizes application arguments.
    */
   private def checkArgs(args: Array[String]) = {
-    assert(args != null && args.length == 1, usage)
+    //assert(args != null && args.length == 1, usage)
   }
 
 }
