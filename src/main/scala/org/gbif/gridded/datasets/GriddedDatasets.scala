@@ -127,6 +127,7 @@ object GriddedDatasets {
       .repartition(1)
       .write
       .format("jdbc")
+      .option("driver", "org.postgresql.Driver")
       .option("url", jdbcUrl)
       .option("dbtable", jdbcTable)
       .option("user", jdbcUser)
