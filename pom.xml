@@ -25,8 +25,20 @@
 
   <repositories>
     <repository>
-      <id>gbif-all</id>
-      <url>http://repository.gbif.org/content/groups/gbif</url>
+      <id>gbif-central</id>
+      <url>https://repository.gbif.org/repository/central/</url>
+    </repository>
+    <repository>
+      <id>gbif-release</id>
+      <url>https://repository.gbif.org/repository/releases/</url>
+    </repository>
+    <repository>
+      <id>gbif-snapshot</id>
+      <url>https://repository.gbif.org/repository/snapshots/</url>
+    </repository>
+    <repository>
+      <id>gbif-thirdparty</id>
+      <url>https://repository.gbif.org/repository/thirdparty/</url>
     </repository>
   </repositories>
 
