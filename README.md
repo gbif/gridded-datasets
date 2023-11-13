@@ -71,7 +71,7 @@ CREATE INDEX IF NOT EXISTS dataset_griddeds_dataset_key_idx ON dataset_gridded(d
 ## How to build
 
 ```shell
-mvn clean package
+mvn clean install docker:build docker:push
 ```
 
 ## How to run

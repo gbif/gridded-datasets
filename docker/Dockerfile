@@ -10,7 +10,7 @@ USER gbif
 
 RUN mkdir -p /home/gbif/.m2/repository
 
-RUN --mount=type=cache,mode=0777,target=/home/gbif/.m2,uid=1000,gid=1000 git clone https://github.com/gbif/gridded-datasets.git && \
+RUN git clone https://github.com/gbif/gridded-datasets.git && \
     cd gridded-datasets && \
     git fetch && \
     git checkout ${BUILD_BRANCH} && \
