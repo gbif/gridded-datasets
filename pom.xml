@@ -56,6 +56,7 @@
 
     <docker.registry>docker.gbif.org</docker.registry>
     <docker-maven-plugin.version>0.43.4</docker-maven-plugin.version>
+    <git-commit-id-maven-plugin.version>7.0.0</git-commit-id-maven-plugin.version>
 
     <spark.version>3.4.0</spark.version>
     <scala.version>2.12.17</scala.version>
@@ -99,6 +100,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
         <configuration>
+          <shadedArtifactAttached>true</shadedArtifactAttached>
           <filters>
             <filter>
               <artifact>*:*</artifact>
@@ -119,21 +121,23 @@
           </execution>
         </executions>
       </plugin>
-      <!-- Plugin definition to disable the creation of the test-jar -->
+      <!-- Plugin to get git branch as maven value -->
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>${git-commit-id-maven-plugin.version}</version>
         <executions>
           <execution>
-            <id>attach-test-jar</id>
+            <id>get-the-git-infos</id>
             <goals>
-              <goal>test-jar</goal>
+              <goal>revision</goal>
             </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/test</outputDirectory>
-            </configuration>
+            <phase>initialize</phase>
           </execution>
         </executions>
+        <configuration>
+          <injectAllReactorProjects>true</injectAllReactorProjects>
+        </configuration>
       </plugin>
       <!-- Docker -->
       <plugin>
@@ -151,6 +155,9 @@
                   <platform>linux/amd64</platform>
                   <noCache>true</noCache>
                 </buildOptions>
+                <args>
+                  <BUILD_BRANCH>${git.branch}</BUILD_BRANCH>
+                </args>
               </build>
             </image>
           </images>
@@ -158,7 +165,6 @@
       </plugin>
     </plugins>
   </build>
-
   <dependencies>
     <dependency>
       <groupId>org.scala-lang</groupId>
