@@ -1,14 +1,8 @@
 # Gridded datasets
 
 How to install:
+Use airflow template located here: [gbif-gridded-datasets-spark](https://github.com/gbif/gbif-airflow-dags/blob/develop/dags/gbif-gridded-datasets-spark.py)
 
-```
-mvn clean install
-
-cd oozie-workflow
-
-./install-workflow.sh dev GITHUB_KEY
-```
 # Algorithm description 
 
 This [blog post](https://data-blog.gbif.org/post/finding-gridded-datasets/) describes the basic algorithm for finding gridded datasets in more detail.
