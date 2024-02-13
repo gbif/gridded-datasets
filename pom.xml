@@ -140,30 +140,6 @@
           <injectAllReactorProjects>true</injectAllReactorProjects>
         </configuration>
       </plugin>
-      <!-- Docker -->
-      <plugin>
-        <groupId>io.fabric8</groupId>
-        <artifactId>docker-maven-plugin</artifactId>
-        <version>${docker-maven-plugin.version}</version>
-        <configuration>
-          <registry>${docker.registry}</registry>
-          <images>
-            <image>
-              <name>${project.artifactId}:${project.version}</name>
-              <build>
-                <dockerFileDir>${project.basedir}/docker</dockerFileDir>
-                <buildOptions>
-                  <platform>linux/amd64</platform>
-                  <noCache>true</noCache>
-                </buildOptions>
-                <args>
-                  <BUILD_BRANCH>${git.branch}</BUILD_BRANCH>
-                </args>
-              </build>
-            </image>
-          </images>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
   <dependencies>
