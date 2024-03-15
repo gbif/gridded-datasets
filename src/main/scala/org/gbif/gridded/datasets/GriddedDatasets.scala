@@ -66,7 +66,7 @@ object GriddedDatasets {
     val config: GriddedConfiguration = Configurations.fromFile(args(0))
 
     val hiveDatabase = config.hive.database
-    val hiveTableOccurrence = config.hive.table
+    val hiveTableOccurrence = "iceberg." + config.hive.database + "." + config.hive.table
     val jdbcUrl = config.registry.jdbc
     val jdbcUser = config.registry.user
     val jdbcPassword = config.registry.password
@@ -86,6 +86,9 @@ object GriddedDatasets {
       .builder()
       .appName("Gridded datasets")
       .config("spark.sql.warehouse.dir", warehouseLocation)
+      .config("spark.sql.catalog.iceberg.type", "hive")
+      .config("spark.sql.catalog.iceberg", "org.apache.iceberg.spark.SparkCatalog")
+      .config("spark.sql.defaultCatalog", "iceberg")
       .enableHiveSupport()
       .getOrCreate()
 
