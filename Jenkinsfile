@@ -20,7 +20,7 @@ pipeline {
       }
     }
 
-    stage('Build and push Docker images: Clustering') {
+    stage('Build and push Docker image') {
       steps {
         sh 'build/gridded-datasets-docker-build.sh'
       }
