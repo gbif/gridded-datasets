@@ -8,10 +8,34 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '10'))
     skipStagesAfterUnstable()
     timestamps()
+    disableConcurrentBuilds()
   }
-
+  parameters {
+    booleanParam(name: 'RELEASE', defaultValue: false, description: 'Make a Maven release')
+  }
   stages {
-
+    stage('Validate') {
+      when {
+        allOf {
+          expression { params.RELEASE }
+          not {
+             branch 'master'
+          }
+        }
+      }
+      steps {
+        script {
+          error('Releases are only allowed from the master branch.')
+        }
+      }
+    }
+    stage('Set project version') {
+      steps {
+        script {
+          env.VERSION = """${sh(returnStdout: true, script: './build/get-version.sh ${RELEASE}')}"""
+        }
+      }
+    }
     stage('Maven build') {
       steps {
         configFileProvider([configFile(fileId: 'org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig1387378707709', variable: 'MAVEN_SETTINGS')]) {
@@ -19,21 +43,32 @@ pipeline {
         }
       }
     }
-
-    stage('Build and push Docker image') {
+    stage('Release version to nexus') {
+      when {
+        allOf {
+          expression { params.RELEASE }
+          branch 'master'
+        }
+      }
       steps {
-        sh 'build/gridded-datasets-docker-build.sh'
+        configFileProvider([configFile(fileId: 'org.jenkinsci.plugins.configfiles.maven.GlobalMavenSettingsConfig1387378707709', variable: 'MAVEN_SETTINGS')]) {
+          git 'https://github.com/gbif/gridded-datasets.git'
+          sh 'mvn -s $MAVEN_SETTINGS release:prepare release:perform -Denforcer.skip=true -DskipTests'
+        }
       }
     }
-
-  }
-
-    post {
-      success {
-        echo 'Gridded datasets executed successfully!'
+    stage('Build and publish Docker image') {
+      steps {
+        sh 'build/gridded-datasets-docker-build.sh ${RELEASE} ${VERSION}'
       }
-      failure {
-        echo 'Gridded datasets execution failed!'
+    }
+  }
+  post {
+    success {
+      echo 'Gridded datasets executed successfully!'
+    }
+    failure {
+      echo 'Gridded datasets execution failed!'
     }
   }
 }
