@@ -9,7 +9,7 @@
 
   <groupId>org.gbif.gridded.datasets</groupId>
   <artifactId>gridded-datasets</artifactId>
-  <version>1.1.1-SNAPSHOT</version>
+  <version>1.1.1</version>
 
   <name>Gridded Datasets</name>
   <url>https://github.com/gbif/gridded-datasets</url>
@@ -18,7 +18,7 @@
     <connection>scm:git:git@github.com:gbif/gridded-datasets.git</connection>
     <url>https://github.com/gbif/gridded-datasets</url>
     <developerConnection>scm:git:git@github.com:gbif/gridded-datasets.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>gridded-datasets-1.1.1</tag>
   </scm>
 
   <repositories>
